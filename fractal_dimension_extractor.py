@@ -35,9 +35,23 @@ def fractal_dimension(Z, threshold=0.5):
     n = 2**np.float64(np.log2(p))
     Z = Z[:int(n), :int(n)]
     
-    # List of box sizes (powers of 2)
-    scales = np.logspace(1, int(np.log2(n)), num=10, endpoint=False, base=2).astype(int)
+    n_scales = int(np.log2(n))
+    scales = 2**np.arange(1, n_scales)
     counts = []
+    
+    """for i,size in enumerate(scales):
+        # log sic to count boxes of 'size'
+        counts[i] = number_of_boxes_found
+    
+    # Now the mask will match the length of scales
+    mask = counts > 0
+    scales = scales[mask]
+    counts = counts[mask]"""
+    
+    
+    # List of box sizes (powers of 2)
+    # scales = np.logspace(1, int(np.log2(n)), num=10, endpoint=False, base=2).astype(int)
+    # counts = []
     
     for size in scales:
         # reshape into blocks and check which blocks contain "data"
@@ -49,11 +63,25 @@ def fractal_dimension(Z, threshold=0.5):
                     count += 1
         counts.append(count)
         
+        #Convert to numpy arrays first
+    scales = np.array(scales, dtype=float)
+    counts = np.array(counts, dtype=float)
+        
+        # Only keep indices where count > 0 (Log of 0 is undefined)
+        # This automatically keeps x and y at the same length
+    mask = counts > 0
+    scales = scales[mask]
+    counts = counts[mask]
+    
+        # 4. Perform the linear fit
+    if len(counts) < 2:
+        return 0.0 # Not enough data to find a slope
+        
         # perform a linear fit on the log-log plot
         # The slope of this line is the Fractal Dimension (D)
         
-        coeffs = np.polyfit(np.log(scales), np.log(counts), 1)
-        return -coeffs[0]
+    coeffs = np.polyfit(np.log(scales), np.log(counts), 1)
+    return -coeffs[0]
     
 # Examplr usage:
 dummy_data = np.random.rand(512, 512)
