@@ -5,7 +5,7 @@ Fractals: These are infinitely complex patterns that are self-similar across dif
 
 - They help to place infinite dimensions inside a single dimension which can be helpful in high 
 ordered dimension representation.
-- Here the data is treated ad a cloud in space and we measure how it scales as we change 
+- Here the data is treated as a cloud in space and we measure how it scales as we change 
 resolution
 """
 
